@@ -20,7 +20,7 @@ app = FastAPI()
 # Configure CORS
 origins = [
     "http://localhost:3000",
-    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
     "*",
 ]
 
@@ -53,18 +53,19 @@ async def read_request_body(request: Request):
         profile = api.get_profile(user)
         
         # Debugging: Print the profile keys
-        print(f"Profile keys: {profile.keys()}")
+        print(f"Profile keys: {profile}")
 
         summary = profile.get('summary', 'Summary not available')
         name = profile.get('firstName', 'First name not available') + " " + profile.get('lastName', 'Last name not available')
         experience = profile.get('experience', 'Experience not available')
         education = profile.get('education', 'Education not available')
-
+        picture = profile.get('displayPictureUrl', 'Display Picture Unavailable')
         content = {
             "summary": summary,
             "name": name,
             "experience": experience,
-            "education": education
+            "education": education, 
+            "link": url
         }
 
         return content
