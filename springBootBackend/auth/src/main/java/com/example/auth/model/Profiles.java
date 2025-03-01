@@ -2,10 +2,12 @@ package com.example.auth.model;
 
 import jakarta.persistence.*;
 
+//Profile Model
 @Entity
 @Table(name = "profiles") // Matches your PostgreSQL table name
 public class Profiles {
 
+    //Defining all of the columns
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,11 +26,11 @@ public class Profiles {
     @Column(columnDefinition = "TEXT")
     private String link;
 
-    // Default constructor
+    //Default constructor
     public Profiles() {
     }
 
-    // Parameterized constructor
+    //Parameterized constructor
     public Profiles(String username, String summary, String name, String experience, String education, String link) {
         this.username = username;
         this.summary = summary;
@@ -38,7 +40,7 @@ public class Profiles {
         this.link = link;
     }
 
-    // Getters and setters
+    //Getters and setters
     public Long getId() {
         return id;
     }

@@ -1,8 +1,12 @@
+//Importing dependencies
 import React, { useState } from "react";
 import "../styles/Register.css";
 import { useNavigate } from "react-router-dom";
 
+//Register function used for displaying all content relevant to the register page
 function Register() {
+
+  //Initializing all fields and states used within this page
   const navigate = useNavigate()
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -10,10 +14,11 @@ function Register() {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
+  //The onSubmit function of the submit button
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
+    if (password !== confirmPassword) { //Ensures that the passwords are the same
       setError("Passwords do not match");
       setSuccessMessage("");
       return;
@@ -21,16 +26,17 @@ function Register() {
 
     setError(""); // Clear error if validation passes
 
+    //Making an api call to register the users credentials in the postgres database
     try {
       const response = await fetch("http://localhost:8081/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password }), //Providing the username and password
       });
 
-      const data = await response.text(); // Spring Boot returns plain text response
+      const data = await response.text(); //Spring Boot returns plain text response
 
       if (response.ok) {
         setSuccessMessage(data);
@@ -49,6 +55,7 @@ function Register() {
     }
   };
 
+  //Returning the register component and page
   return (
     <div className="register-container">
       <h2>Register</h2>

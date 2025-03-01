@@ -1,16 +1,19 @@
+//Importing dependencies
 import React, { useContext } from "react";
 import "../styles/ShowProfile.css";
 import { AuthContext } from "../context/AuthContext";
 
 function ShowProfile({ profileData, profileHide }) {
+
+  //Initializing all states and fields used within the component
   const { isLogin, username } = useContext(AuthContext);
 
-  // If no profile data is passed, show a message
+  //If no profile data is passed, show a message
   if (!profileData) {
     return <p>No profile data available</p>;
   }
 
-  // Helper function to format time period
+  //Helper function to format time period
   const formatTimePeriod = (timePeriod) => {
     if (timePeriod && typeof timePeriod === "object") {
       const start = timePeriod.startDate
@@ -24,7 +27,7 @@ function ShowProfile({ profileData, profileHide }) {
     return "N/A";
   };
 
-  // Default profileData properties if they are undefined
+  //Default profileData properties if they are undefined
   const safeProfileData = {
     link: profileData.link || "N/A",
     name: profileData.name || "N/A",
@@ -33,36 +36,37 @@ function ShowProfile({ profileData, profileHide }) {
     education: profileData.education || [],
   };
 
+  //onSubmit save method
   const handleSaveProfile = async () => {
     try {
-      // Prepare the profile data to be sent in the request body
+      //Prepare the profile data to be sent in the request body
       const profileDataToSave = {
         username,
         name: safeProfileData.name,
         summary: safeProfileData.summary,
-        experience: JSON.stringify(safeProfileData.experience) || "N/A",  // Convert experience to string if necessary
-        education: JSON.stringify(safeProfileData.education) || "N/A",  // Convert education to string if necessary
+        experience: JSON.stringify(safeProfileData.experience) || "N/A",  //Convert experience to string if necessary
+        education: JSON.stringify(safeProfileData.education) || "N/A",  //Convert education to string if necessary
         link: safeProfileData.link || "N/A"
       };
   
-      // Log the request body to check if the structure is correct
+      //Log the request body to check if the structure is correct
       console.log("Request Body:", JSON.stringify(profileDataToSave));
   
-      // Send the profile data to the backend API
+      //Send the profile data to the backend API
       const response = await fetch("http://127.0.0.1:8081/profiles/addProfile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(profileDataToSave), // Send the profile data
+        body: JSON.stringify(profileDataToSave), //Send the profile data
       });
   
       if (response.ok) {
-        // Profile was added successfully
+        //Profile was added successfully
         alert("Profile saved successfully!");
-        // Refresh the page
+        //Refresh the page
         window.location.reload();
-        // Close the profile modal
+        //Close the profile modal
         profileHide();
       } else {
         alert("Failed to save profile");
@@ -73,6 +77,7 @@ function ShowProfile({ profileData, profileHide }) {
     }
   };
 
+  //Returning all applicable content for the profile component
   return (
     <div className="profile-container">
       <h2>LinkedIn Profile</h2>
