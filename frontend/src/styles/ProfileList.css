@@ -1,0 +1,85 @@
+/* Profile List */
+.profile-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Profile Container */
+.profile-container {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.profile-container:hover {
+  transform: scale(1.02);
+}
+
+/* Headings */
+h2, h3 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-size: 22px;
+  border-bottom: 2px solid #0073b1;
+  padding-bottom: 5px;
+}
+
+h3 {
+  font-size: 18px;
+  margin-top: 15px;
+}
+
+/* Paragraphs */
+p {
+  margin: 5px 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* Links */
+a {
+  color: #0073b1;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Lists */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background: #f9f9f9;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Strong Text */
+strong {
+  color: #333;
+}
+
+/* Error Message */
+.error {
+  color: red;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 20px;
+}
