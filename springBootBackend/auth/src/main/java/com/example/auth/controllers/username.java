@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 @Builder
 @Getter
 @Setter
+//Getters and setter methods for username
 public class username {
     public String username;
 

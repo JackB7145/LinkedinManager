@@ -1,3 +1,4 @@
+//Importing dependencies
 import React, { useContext, useState, useEffect } from "react";
 import "../styles/Home.css";
 import ShowProfile from "./showProfile";
@@ -5,16 +6,21 @@ import ProfileList from "./ProfileList"; // Import ProfileList
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
+//Home Content
 function Home() {
+
+  //Initialzing fields used within this page
   const navigate = useNavigate();
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [profileData, setProfileData] = useState(null);
   const { isLogin, username, setUser, setIsLogin } = useContext(AuthContext);
   const [hasSavedProfiles, setHasSavedProfiles] = useState(false);
+
+  //Use effect called on page mount
   useEffect(() => {
-    const user = localStorage.getItem("username");
-    if (user) {
+    const user = localStorage.getItem("username"); //Gets the user from the local storage
+    if (user) { //If the user is indeed, logged in this will trigger refreshing the app for corresponding content
         setUser(user);
         setIsLogin(true)
         console.log("Username found in localStorage:", user);
@@ -26,8 +32,11 @@ function Home() {
     }
   }, []);
 
+  //Method used for getting saved profiles on page mount. Sends the username to the springboot backend and recieves back a json object containing all of the saved portfolios
   const checkSavedProfiles = async () => {
     try {
+
+      //Fetching the api content
       const response = await fetch("http://127.0.0.1:8081/profiles/getProfiles", {
         method: "POST", // Ensure it's a POST request to send a body
         headers: {
@@ -38,28 +47,27 @@ function Home() {
 
       if (!response.ok) throw new Error("Failed to fetch profiles");
 
-      // const data = await response.json();
-
       setHasSavedProfiles(true);
     } catch (error) {
       console.error("Error fetching saved profiles:", error);
     }
   };
 
+  //This method is used for retrieving the initial profile from the python service in my python api
   const fetchProfile = async () => {
     setLoading(true);
     try {
       const response = await fetch("http://127.0.0.1:8000/linkedInUser", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
+        body: JSON.stringify({ url }), //Provides the url of the candidate in the request body
       });
 
       if (!response.ok) {
         throw new Error("Failed to fetch profile");
       }
 
-      const data = await response.json();
+      const data = await response.json(); //Converts the response to json
       setProfileData(data);
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -76,6 +84,7 @@ function Home() {
     navigate("/login"); // Redirect to login page
   };
 
+  //Returning content for home page
   return (
     <div className="home-container">
       {/* Top Navbar */}

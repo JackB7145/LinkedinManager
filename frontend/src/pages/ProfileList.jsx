@@ -1,8 +1,12 @@
+//Importing dependencies
 import React, { useEffect, useState, useContext } from "react";
 import "../styles/ProfileList.css";
 import { AuthContext } from "../context/AuthContext";
 
+//Profile list component used to illistrate all of the current saved profiles of the user
 function ProfileList() {
+
+  //Initializing fields and states used throughout this page
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -18,15 +22,18 @@ function ProfileList() {
     return "N/A";
   };
 
+  //On mount and onchange of logged in state, the app gets the profiles from the postgresql database through the springboot api
   useEffect(() => {
+
+    //Method for getting the profiles
     const fetchProfiles = async () => {
-      if (!username) return;
+      if (!username) return; //Won't do anything if the user is not logged in
 
       try {
         const response = await fetch("http://127.0.0.1:8081/profiles/getProfiles", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username }),
+          body: JSON.stringify({ username }), //Provides the username in the request body
         });
 
         if (!response.ok) throw new Error("Failed to fetch profiles");
@@ -48,11 +55,11 @@ function ProfileList() {
   if (loading) return <p>Loading profiles...</p>;
   if (error) return <p className="error">{error}</p>;
 
+  //Returning the profile list content
   return (
     <div className="profile-list">
       {profiles.length > 0 ? (
         profiles.map((profile, profileIndex) => {
-          // Ensure experience and education are arrays, parse if necessary
           const safeProfile = {
             ...profile,
             experience: typeof profile.experience === "string" ? JSON.parse(profile.experience) : profile.experience,
