@@ -4,10 +4,10 @@ As a company that doesn't take resumes, Scotiabank's hiring managers often compl
 
 This application is the extension of LinkedIn you never new you needed. By scraping, saving, and storing potential candidates profiles to be accessed later for reference, this application is the perfect additon to any hiring manager or member of talent aquisition. 
 
-Stack: \n
-Python - Fast API hosted with uvicorn \n
-Java - SpringBoot \n
-Database - PostgreSQL \n
-Frontend (HTML5, CSS, Javascript) - React.js and CSS \n
+Stack:  
+Python - Fast API hosted with uvicorn   
+Java - SpringBoot   
+Database - PostgreSQL   
+Frontend (HTML5, CSS, Javascript) - React.js and CSS   
 
 
