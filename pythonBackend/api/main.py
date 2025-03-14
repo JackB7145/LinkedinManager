@@ -4,17 +4,11 @@ from linkedin_api import Linkedin  # Import Linkedin API wrapper
 from dotenv import load_dotenv  # Import dotenv to load environment variables
 import os  # Import OS module to access environment variables
 from urllib.parse import urlparse  # Import urlparse to parse URLs
+import asyncio
+import requests
 
 # Load .env file to access stored environment variables
 load_dotenv()
-
-# Function to extract LinkedIn username from a given profile URL
-def parseURL(url):
-    # Parse the URL using urlparse
-    parsed_url = urlparse(url)
-    # Extract the path and get the second last part of the path (LinkedIn username)
-    user = parsed_url.path.split('/')[-2]
-    return user
 
 # Create FastAPI app instance
 app = FastAPI()
@@ -35,38 +29,77 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
+async def pollSnapshot(url, headers):
+
+    querystring = {"compress":"true"}
+
+    while True:
+        response = requests.get(url, headers=headers, params=querystring)
+        
+        if response.status_code == 200:
+            print(response.json())
+            break
+                
+        else:
+            print(f"❌ Error {response.status_code}: {response.text}")
+            await asyncio.sleep(15)
+    
+    return response.json()
+
+
+getSnapshotUrl = os.getenv("SNAPSHOT_URL")
+dataURL = os.getenv("DATA_URL")
+API_KEY = os.getenv('API_KEY')
+
 # Define an API route for retrieving LinkedIn user details
-@app.post("/linkedInUser")
+@app.post("/")
 async def read_request_body(request: Request):
     try:
-        # Access environment variables for LinkedIn authentication
-        username = os.getenv('USERNAME')
-        password = os.getenv('PASSWORD')
-
-        # Authenticate using LinkedIn API with provided credentials
-        api = Linkedin(username, password)
         
         # Extract JSON body from the incoming request
         body = await request.json()
         print(f"Received JSON body: {body}")  # Debugging log
 
         # Retrieve the LinkedIn profile URL from the request body
-        url = body.get("url")
-        if not url:
+        linkedinUrl = body.get("url", "")
+
+        if not linkedinUrl:
             return {"error": "No 'topic' field in the request body"}  # Return error if URL is missing
-
-        # Extract LinkedIn username from the provided URL
-        user = parseURL(url)
         
-        # Fetch the user's profile details from LinkedIn API
-        profile = api.get_profile(user)
-        
-        # Debugging: Print the profile data keys
-        print(f"Profile keys: {profile}")
+        print("URL Found In Body:", linkedinUrl)
 
+        headers = {
+            "Authorization": f"Bearer {API_KEY}",
+            "Content-Type": "application/json",
+        }
+        params = {
+            "dataset_id": "gd_l1viktl72bvl7bjuj0",
+            "include_errors": "true",
+        }
+        data = [
+            {"url":linkedinUrl},
+        ]
+
+        response = requests.post(getSnapshotUrl, headers=headers, params=params, json=data).json()
+
+        SNAPSHOT_ID = response.get("snapshot_id", None)
+
+        if not SNAPSHOT_ID:
+            return {"error": "Information not found"}
+        
+        print("SnapshotID found: ", SNAPSHOT_ID)
+
+        newDataURL = dataURL+SNAPSHOT_ID
+
+        print("URL: ", newDataURL)
+
+        headers = {"Authorization": f"Bearer {API_KEY}"}
+
+        profile = await pollSnapshot(newDataURL, headers)
+    
         # Extract relevant profile details from the API response
-        summary = profile.get('summary', 'Summary not available')
-        name = profile.get('firstName', 'First name not available') + " " + profile.get('lastName', 'Last name not available')
+        summary = profile.get('about', 'Summary not available')
+        name = profile.get('name', "Name not available")
         experience = profile.get('experience', 'Experience not available')
         education = profile.get('education', 'Education not available')
         
@@ -76,7 +109,7 @@ async def read_request_body(request: Request):
             "name": name,  # User's full name
             "experience": experience,  # Work experience details
             "education": education,  # Education details
-            "link": url  # Original LinkedIn profile URL
+            "link": linkedinUrl  # Original LinkedIn profile URL
         }
 
         return content  # Return the extracted LinkedIn profile data

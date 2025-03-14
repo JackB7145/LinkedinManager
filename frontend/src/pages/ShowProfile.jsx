@@ -13,20 +13,6 @@ function ShowProfile({ profileData, profileHide }) {
     return <p>No profile data available</p>;
   }
 
-  //Helper function to format time period
-  const formatTimePeriod = (timePeriod) => {
-    if (timePeriod && typeof timePeriod === "object") {
-      const start = timePeriod.startDate
-        ? `${timePeriod.startDate.month}/${timePeriod.startDate.year}`
-        : "N/A";
-      const end = timePeriod.endDate
-        ? `${timePeriod.endDate.month}/${timePeriod.endDate.year}`
-        : "Present";
-      return `${start} - ${end}`;
-    }
-    return "N/A";
-  };
-
   //Default profileData properties if they are undefined
   const safeProfileData = {
     link: profileData.link || "N/A",
@@ -95,11 +81,11 @@ function ShowProfile({ profileData, profileHide }) {
         <ul>
           {safeProfileData.experience.map((exp, index) => (
             <li key={index}>
-              <strong>Location:</strong> {exp.locationName || "N/A"} <br />
-              <strong>Company:</strong> {exp.companyName || "N/A"} <br />
+              <strong>Location:</strong> {exp.location || "N/A"} <br />
+              <strong>Company:</strong> {exp.company || "N/A"} <br />
               <strong>Title:</strong> {exp.title || "N/A"} <br />
-              <strong>Geo Location:</strong> {exp.geoLocationName || "N/A"} <br />
-              <strong>Time Period:</strong> {formatTimePeriod(exp.timePeriod)}
+              <strong>Duration:</strong> {exp.duration_short || "N/A"} <br />
+              <strong>Time Period:</strong> {exp.start_date +" - "+exp.end_date}
             </li>
           ))}
         </ul>
@@ -112,10 +98,10 @@ function ShowProfile({ profileData, profileHide }) {
         <ul>
           {safeProfileData.education.map((edu, index) => (
             <li key={index}>
-              <strong>School:</strong> {edu.schoolName || "N/A"} <br />
-              <strong>Degree:</strong> {edu.degreeName || "N/A"} <br />
-              <strong>Major:</strong> {edu.fieldOfStudy || "N/A"} <br />
-              <strong>Time Period:</strong> {formatTimePeriod(edu.timePeriod)}
+              <strong>School:</strong> {edu.title || "N/A"} <br />
+              <strong>Degree:</strong> {edu.degree || "N/A"} <br />
+              <strong>Major:</strong> {edu.field || "N/A"} <br />
+              <strong>Time Period:</strong> {edu.start_year + " " + edu.end_year}
             </li>
           ))}
         </ul>
