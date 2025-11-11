@@ -1,0 +1,27 @@
+{
+  "name": "LinkedIn Manager",
+  "description": "Multi-service LinkedIn management platform built with Spring Boot and FastAPI.",
+  "fullDescription": "LinkedIn Manager is a distributed application that allows users to manage and analyze multiple LinkedIn profiles. The platform uses a Spring Boot backend for core API handling, scheduling, and profile management, while separate FastAPI microservices handle authentication, session validation, and LinkedIn web crawling. The system emphasizes modularity and clarity of service boundaries, enabling future expansion into analytics and automation features without relying on containerization or orchestration frameworks.",
+  "techStack": [
+    "Spring Boot",
+    "Java",
+    "FastAPI",
+    "Python",
+    "PostgreSQL",
+    "REST APIs"
+  ],
+  "features": [
+    "Spring Boot backend for profile management and API routing",
+    "FastAPI microservices for authentication and LinkedIn web scraping",
+    "Lightweight inter-service communication via REST endpoints",
+    "Centralized PostgreSQL persistence for user and session data",
+    "Decoupled Java–Python architecture allowing independent updates",
+    "Configurable rate limits and request batching for LinkedIn crawls",
+    "Extensible structure for adding analytics or recommendation modules"
+  ],
+  "metrics": {
+    "commits": "58",
+    "pullRequests": "3",
+    "linesOfCode": "~5,600"
+  }
+}
